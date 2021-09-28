@@ -1,9 +1,10 @@
+import connectDB from "../../middlewares/db";
 import { updateTokens } from "../../services/jwt";
 
 /*
  *  takes refresh token and returns new auth and refresh token.
 */
-export default async function handler(req, res) {
+async function handler(req, res) {
     const {
         method, 
         body
@@ -25,3 +26,5 @@ export default async function handler(req, res) {
     }
     else res.status(405).send();
 }
+
+export default connectDB(handler);

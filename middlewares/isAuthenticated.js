@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import connectDB from "./db";
 
 const isAuthenticated = handler => async (req, res) => {
     try {
@@ -9,7 +10,7 @@ const isAuthenticated = handler => async (req, res) => {
         if (user) {
             const { _id, username, email, type } = user;
             req.user = { _id, username, email, type }
-            return handler(req, res);
+            return connectDB(handler(req, res));
         }
         else throw {message: "invalid token"}
     } catch (error) {
