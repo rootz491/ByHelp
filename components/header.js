@@ -40,7 +40,7 @@ export default function Header() {
                 header {
                     display: flex;
                     margin: 1em;
-                    justify-content: right;
+                    justify-content: flex-end;
                 }
                 a {
                     padding: 4px 9px;

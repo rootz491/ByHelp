@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const isAuthenticated = connectDB => handler => async (req, res) => {
+const isAuthenticated = handler => async (req, res) => {
     try {
         if (!req.headers.authorization) throw {message: "Authentication header not present"}
         if (!(req.headers.authorization.split(' ')[0] === "Bearer")) throw {message: "bearer token not available"}
@@ -9,7 +9,7 @@ const isAuthenticated = connectDB => handler => async (req, res) => {
         if (user) {
             const { _id, username, email, type } = user;
             req.user = { _id, username, email, type }
-            return connectDB(handler(req, res));
+            return handler(req, res);
         }
         else throw {message: "invalid token"}
     } catch (error) {

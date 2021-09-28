@@ -1,6 +1,5 @@
 import Job from '../../../models/job';
 import isAuthenticated from '../../../middlewares/isAuthenticated';
-import connectDB from '../../../middlewares/db';
 
 async function handler(req, res) {
     const {
@@ -58,4 +57,4 @@ async function handler(req, res) {
 }
 
 
-export default isAuthenticated(connectDB(handler));
+export default isAuthenticated(handler);

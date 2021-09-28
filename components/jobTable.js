@@ -13,7 +13,7 @@ export default function JobTable({ jobs }) {
                     </div>
                 </div>
                 <div className="body">
-                    { jobs.map((job, i) => (
+                    { jobs.length > 0 ? jobs.map((job, i) => (
                         <Link key={i} href={`/job/${job.id}`}><a>
                         <div className="row job">
                             <p className="title">{job.title}</p>
@@ -22,7 +22,7 @@ export default function JobTable({ jobs }) {
                             <p className="ce">{job.currentEmployees}</p>
                         </div></a>
                         </Link>
-                    )) }
+                    )) : <div style={{"textAlign": "center"}} className="row job"><p></p><p>No jobs available at the moment!</p></div> }
                 </div>
             </div>
 
