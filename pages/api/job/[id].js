@@ -5,7 +5,6 @@ async function handler(req, res) {
     const {
         method,
         query,
-        body,
         user
     } = req
 
@@ -15,14 +14,6 @@ async function handler(req, res) {
             try {
                 const job = await Job.findById(query.id).populate('employer').populate('employees').exec();
                 res.json({success: true, job});
-            } catch (error) {
-                res.json({success: false, error: error.message})
-            }
-            break;
-
-        case 'PUT':
-            try {
-                console.log(body);
             } catch (error) {
                 res.json({success: false, error: error.message})
             }

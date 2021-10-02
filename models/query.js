@@ -21,7 +21,7 @@ var querySchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: new Date().getUTCDate()
+        default: new Date().getDate()
     },
     question: {
         type: String,
