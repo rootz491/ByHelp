@@ -5,7 +5,8 @@ async function handler(req, res) {
     const {
         method,
         query,
-        body
+        body,
+        user
     } = req
 
     switch(method) {
@@ -23,7 +24,7 @@ async function handler(req, res) {
             try {
                 console.log(body);
             } catch (error) {
-                
+                res.json({success: false, error: error.message})
             }
             break;
         
@@ -38,8 +39,7 @@ async function handler(req, res) {
                 // check if job exists or not
                 if (job) {
                     //  check if job's 'employer' is same as 'current user' or current user is 'admin' 
-                    if (job.employer.id === req.user._id || req.user.type === 'admin') {
-                        
+                    if (job.employer.id === user._id || user.type === 'admin') {
                         await job.remove();
                         return res.json({success: true});
                     }

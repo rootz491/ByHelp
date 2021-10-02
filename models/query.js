@@ -41,7 +41,7 @@ module.exports = Query;
 
 // testing queries out loud.
 /*
-mongoose.connect('mongodb+srv://super:super@one-for-all.hgvnw.mongodb.net/next-demo-auth?retryWrites=true&w=majority')
+mongoose.connect('xyz')
 .then(async _ => {
    
     /* get queries
