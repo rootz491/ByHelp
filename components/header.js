@@ -1,18 +1,19 @@
 import Route from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useReset, useAuth } from "../services/hooks";
+import { useReset, useUser } from "../services/hooks";
 
 export default function Header() {
-    const [auth, setAuth] = useState(false);
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         async function Exec() {
-            const auth = await useAuth();
-            setAuth(auth);
+            const user = await useUser();
+            setUser(user);
         }
         Exec();
     }, [])
+
     const Logout = () => {
         useReset();
         Route.push('/login');
@@ -21,9 +22,10 @@ export default function Header() {
     return (
         <header>
             {
-                auth ?
+                user ?
                 <>
                     <Link href="/profile"><a>profile</a></Link>
+                    {user.type !== 'employee'   ? <Link href="/job"><a>post job</a></Link> : null} {/* show post page to admin or employer only */}
                     <Link href="/work-place"><a>work place</a></Link>
                     <a href="#" onClick={Logout}>logout</a>
                 </>
@@ -34,7 +36,7 @@ export default function Header() {
                     <Link href="/employer/register"><a>employer register</a></Link>
                 </>
             }
-            
+            <Link href="/help"><a>FAQ</a></Link>
 
             <style jsx>{`
                 header {

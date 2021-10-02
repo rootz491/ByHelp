@@ -15,7 +15,7 @@ async function handler(req, res) {
             if (!(body.password && body.email))
                 throw {message: "Provide all fields"}
             // fetch User from DB
-            const currentUser = await User.findOne({email: body.email});
+            const currentUser = await User.findOne({email: body.email}).select('+hash +salt');  //  exclusively include hash and salt while querying
             if (!currentUser)
                 throw {message: "User not found"}
             // compare user provided password with DB's pwd hash using bcrypt

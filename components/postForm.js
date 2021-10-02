@@ -1,5 +1,6 @@
 import route from "next/router";
 import { useState } from "react"
+import { postJob } from "../services/methods";
 
 export default function LoginForm() {
     const [title, setTitle] = useState('');
@@ -7,30 +8,21 @@ export default function LoginForm() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const jobPost = async e => {
+    const JobPost = async e => {
         e.preventDefault();
         setLoading(true);
-        const res = await fetch("/api/job", {
-            method: 'POST',
-            headers: {
-                "content-type": "application/json"
-            },
-            body: JSON.stringify({
-                title, description
-            })
-        });
-        const data = await res.json();
-        if (res.status === 201) {
+        const res = await postJob(title, description);
+        if (res.success === true) {
             route.push('/work-place');
         }
         else {
-            setError(data.error);
+            setError(res.error);
         }
         setLoading(false)
     }
 
     return (
-        <form method="POST" onSubmit={jobPost}>
+        <form method="POST" onSubmit={JobPost}>
             <input placeholder="Title of the job" type="text" value={title} onChange={e => setTitle(e.target.value)} required />
             <textarea placeholder="Description of your job" value={description} onChange={e => setDescription(e.target.value)} required />
             <button disabled={loading} type="submit">post</button>

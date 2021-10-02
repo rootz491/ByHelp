@@ -12,7 +12,7 @@ async function handler(req, res) {
 
         case 'GET':
             try {
-                const job = await Job.findById(query.id).populate('employer').populate('employees').exec()
+                const job = await Job.findById(query.id).populate('employer').populate('employees').exec();
                 res.json({success: true, job});
             } catch (error) {
                 res.json({success: false, error: error.message})

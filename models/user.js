@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 var userSchema = new mongoose.Schema({
     username: {
@@ -13,11 +13,13 @@ var userSchema = new mongoose.Schema({
     },
     hash: {
         type: String,
-        required: true
-    },
+        required: true,
+        select: false   //  exclude this field from normal querying
+    },                  /*  only include by projection -> Query.selet("+hash") */
     salt: {
         type: String,
-        required: true
+        required: true,
+        select: false
     },
     type: {
         type: String,   //  employee / employer / admin
@@ -30,4 +32,4 @@ mongoose.models = {};
 
 var User = mongoose.model("User", userSchema);
 
-export default User;
+module.exports = User;

@@ -17,7 +17,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function JobSpecific({ id }) {
-    const [job, setJob] = useState({})
+    const [job, setJob] = useState()
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState({});
     const [owner, setOwner] = useState(false);
@@ -28,26 +28,28 @@ export default function JobSpecific({ id }) {
             // fetch user
             const user = await useUser();
             setUser(user)
-            // if user is valid
-            if (user) {
-                // fetch job
-                const job = await fetchJobById(id);
-                setJob(job);
+            // fetch job
+            const job = await fetchJobById(id);
+            setJob(job);
+            // if user & job is valid
+            if (user && job) {
+                console.log(user);
+                console.log(job);
                 setOwner(user._id === job.employer._id);
                 if (!owner) {
                     job.employees.forEach(e => {
                         if (e._id === user._id) setWorker(true);
                     })
                 }
-                setLoading(false);
             }
-            else Route.push('/');
+            // else Route.push('/');
+            setLoading(false);
         }
         Exec();
     }, [owner, worker])
 
     return (
-        <Layout title={`Job - ${job.title}`}>
+        <Layout title={job?`Job - ${job.title}`:'loading'}>
             { owner ? <OwnerBanner /> : null }
             { worker ? <WorkerBanner /> : null }
             <div className={styles.container}>
@@ -55,7 +57,10 @@ export default function JobSpecific({ id }) {
                     loading ?
                         <h1>Loading, please wait ...</h1>
                     :
-                        <Job job={job} owner={false} />
+                        job ?
+                        <Job job={job} owner={owner} /> 
+                        :
+                        <h1>This Job doesn't exists ...</h1>
                 }
             </div>
         </Layout>
