@@ -15,7 +15,7 @@ async function handler(req, res) {
                 const queries = await Query.find().select('-discussion').populate('by').exec();
                 return res.json({success: true, queries});
             } catch (error) {
-                return res.json({success: false, error: error.message});
+                return res.status(400).json({success: false, error: error.message});
             }
 
         case "POST":
@@ -23,10 +23,14 @@ async function handler(req, res) {
                 const { question } = body;
                 // validate params
                 if (question.length < 10) throw {message: "Question's length too short!"}
-                const newQuery = new Query({ by: user._id, question });
+                const newQuery = new Query({ by: user._id, question, discussion: [] });
                 return res.json({ success: true, query: await newQuery.save() });
             } catch (error) {
-                return res.json({success: false, error: error.message});
+                console.log(error.message);
+                if (error.code === 11000)
+                    return res.status(400).json({success: false, error: "duplicate field found"});
+                else
+                    return res.status(400).json({success: false, error: error.message});
             }
 
         default:

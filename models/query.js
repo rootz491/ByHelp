@@ -3,13 +3,10 @@ const mongoose = require('mongoose');
 var discussionSchema = new mongoose.Schema({
     user: { 
         type: mongoose.Types.ObjectId, 
-        ref: "User", 
-        required: true 
+        ref: "User"
     },
     answer: {
-        type: String,
-        required: true,
-        unique: true
+        type: String
     }
 });
 
@@ -29,7 +26,12 @@ var querySchema = new mongoose.Schema({
         unique: true
     },
     /* subdoc => [ { user, answer }, {...}, ... ] */
-    discussion:  [discussionSchema]
+    discussion:  [{
+        type: discussionSchema,
+        required: false,
+        unique: false,
+        default: []
+    }]
 });
 
 mongoose.models = {};

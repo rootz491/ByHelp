@@ -37,11 +37,34 @@ export async function postJob(title, description) {
     return data;
 }
 
+export async function getQueries() {
+    const res = await fetch("/api/query", {
+        method: 'GET',
+        headers: {
+            "authorization": await useBearer()
+        }
+    })
+    const data = await res.json();
+    return data.queries;
+}
+
+export async function postQuestion(question) {
+    const res = await fetch("/api/query", {
+        method: 'POST',
+        headers: {
+            "content-type": "application/json",
+            "authorization": await useBearer()
+        },
+        body: JSON.stringify({
+            question
+        })
+    })
+    const data = await res.json();
+    return data;
+}
+
 export async function getFaq() {
-    
-
     // Here will be all the questions and answers. That's it. simple and steady 😂
-
     return [
         {
             q: "Is the token amount refundable?",
