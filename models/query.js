@@ -6,7 +6,8 @@ var discussionSchema = new mongoose.Schema({
         ref: "User"
     },
     answer: {
-        type: String
+        type: String,
+        default: ''
     }
 });
 
@@ -28,9 +29,7 @@ var querySchema = new mongoose.Schema({
     /* subdoc => [ { user, answer }, {...}, ... ] */
     discussion:  [{
         type: discussionSchema,
-        required: false,
-        unique: false,
-        default: []
+        default: () => [{}]
     }]
 });
 

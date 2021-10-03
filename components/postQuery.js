@@ -55,7 +55,7 @@ export default function PostQuery({ hidden }) {
                 <img className="close" onClick={hideMe} src="https://img.icons8.com/ios/50/000000/cancel.png"/>
                 <form onSubmit={PostQuestion}>
                     <h1>Post You Questions Here</h1>
-                    <input type="text" placeholder="Enter your question." value={question} onChange={e => setQuestion(e.target.value)} required />
+                    <textarea type="text" placeholder="Enter your question." value={question} onChange={e => setQuestion(e.target.value)} required></textarea>
                     <div>
                         <button className={styles.btn} disabled={loading} type="submit">post</button>
                     </div>
@@ -95,12 +95,14 @@ export default function PostQuery({ hidden }) {
                         display: grid;
                         place-content: center;
                     }
-                    input {
+                    textarea {
                         width: 90%;
+                        height: 100px;
                         // width: 250px;
                         margin: auto;
                         border: 2px solid black;
                         padding: 4px 9px;
+                        resize: none;
                     }
                     form > div {
                         display: flex;
