@@ -63,6 +63,17 @@ export async function postQuestion(question) {
     return data;
 }
 
+export async function fetchQueryById(id) {
+    const res = await fetch(`/api/query/${id}`, {
+        method: 'GET',
+        headers: {
+            "authorization": await useBearer()
+        }
+    })
+    const data = await res.json();
+    return data.query;
+}
+
 export async function getFaq() {
     // Here will be all the questions and answers. That's it. simple and steady 😂
     return [

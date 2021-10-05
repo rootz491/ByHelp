@@ -12,7 +12,7 @@ async function handler(req, res) {
 
         case "GET":
             try {   //  only send question, and some details of owner without discussions.
-                const queries = await Query.find().select('-discussion').populate('by').exec();
+                const queries = await Query.find().select('-discussions').populate('by').exec();
                 return res.json({success: true, queries});
             } catch (error) {
                 return res.status(400).json({success: false, error: error.message});
@@ -22,8 +22,9 @@ async function handler(req, res) {
             try {
                 const { question } = body;
                 // validate params
-                if (question.length < 10) throw {message: "Question's length too short!"}
-                const newQuery = new Query({ by: user._id, question, discussion: [] });
+                if (question.length < 10) throw {message: "Question's length too short (min 10 characters)"}
+                if (question.length > 80) throw {message: "Question's length too large (max 80 characters)"}
+                const newQuery = new Query({ by: user._id, question });
                 return res.json({ success: true, query: await newQuery.save() });
             } catch (error) {
                 console.log(error.message);

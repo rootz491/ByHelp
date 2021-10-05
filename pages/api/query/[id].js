@@ -20,8 +20,9 @@ async function handler(req, res) {
         case "DELETE":
             try {
                 const thatQuery = await Query.findById(query.id).populate('by').exec();
+                if (query.resolved) throw {message: "Query is marked as resolved! can't perform this action."}
                 if (thatQuery) {
-                    if (thatQuery.discussion.length > 2) throw {message: "query with 2 or more answers cannot be deleted directly, delete all the answers first!"}
+                    if (thatQuery.discussions.length > 2) throw {message: "query with 2 or more answers cannot be deleted directly, delete all the answers first!"}
                     if (thatQuery.by.id === user._id  || user.type === 'admin') {
                         await thatQuery.remove();
                         return res.json({success: true});

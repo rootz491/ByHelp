@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import Route from 'next/router';
 import { useState, useEffect } from 'react';
 import { getQueries } from '../../services/methods';
 import Layout from '../../components/layout';
 import styles from '../../styles/Forum.module.css';
 import ErrorBanner from '../../components/errorBanner';
 import PostQuery from '../../components/postQuery';
+import { useAuth } from '../../services/hooks';
 
 export default function Forum() {
     const [questions, setQuestions] = useState([]);
@@ -13,12 +15,16 @@ export default function Forum() {
 
     useEffect(() => {
         async function Exec() {
-            const queries = await getQueries();
-            if (queries) {
-                setQuestions(queries);
+            const user = await useAuth();
+            if (!user) Route.push('/login');
+            else {
+                const queries = await getQueries();
+                if (queries && queries !== undefined) {
+                    setQuestions(queries);
+                }
+                else setError('Questions not loaded. Try again later')
                 setLoading(false);
             }
-            else setError('questions not loaded. try again later')
         }
         Exec();
         return () => {
@@ -48,9 +54,11 @@ export default function Forum() {
                         {
                             loading ?
                             <div><h2>Loading, Please Wait...</h2></div> :
+                            questions.length < 1 ?
+                            <div><h2>No Queries Found, try posting your own</h2></div> :
                             questions.map((q, i) => (
                                 <div className={styles.ques} key={i}>
-                                    <Link href={`/query/${q._id}`}><a>
+                                    <Link href={`/forum/${q._id}`}><a>
                                         <h1>{q.question}</h1>
                                         <p>By {q.by.username}</p>
                                     </a></Link>

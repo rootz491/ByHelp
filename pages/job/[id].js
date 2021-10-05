@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Route from 'next/router';
 import styles from "../../styles/Home.module.css";
 import Layout from "../../components/layout"
 import { fetchJobById } from "../../services/methods";

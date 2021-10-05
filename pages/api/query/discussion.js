@@ -15,37 +15,37 @@ async function handler(req, res) {
                 const { id } = body;
                 const query = await Query.findById(id).exec();
                 if (!query) throw {message: "query doesn't exists"}
-                return res.json({success: true, discussion: query.discussion});
+                return res.json({success: true, discussions: query.discussions});
             } catch (error) {
                 return res.json({success: false, error: error.message});
             }
-            
+
         case "POST":
             try {
                 const { id, answer } = body;
                 let query = await Query.findById(id).exec();
                 if (!query) throw {message: "query doesn't exists"}
+                if (query.resolved) throw {message: "Query is marked as resolved! can't perform this action."}
                 if (query.by == user._id || user.type === 'admin') {
-                    await query.discussion.push({
+                    await query.discussions.push({
                         user: user._id, answer
                     });
                     await query.save();
-                    return res.json({success: true, discussion: query.discussion});
+                    return res.json({success: true, discussions: query.discussions});
                 }
                 else throw {message: "this query doesn't belong to you!"}
             } catch (error) {
                 return res.status(403).json({success: false, error: error.message});
             }
 
-
         case "DELETE":
             try {
                 const {queryID, discussionID} = body;
-
                 const thatQuery = await Query.findById(queryID).exec();
                 if (thatQuery) {
+                    if (thatQuery.resolved) throw {message: "Query is marked as resolved! can't perform this action."}
                     if (thatQuery.by == user._id || user.type === 'admin') {
-                        const thatAnswer = await thatQuery.discussion.id(discussionID)
+                        const thatAnswer = await thatQuery.discussions.id(discussionID)
                         if (thatAnswer) {
                             // instead of `===`, use `==`, this way objectId can be compared to string id
                             if (thatAnswer.user == user._id || user.type === 'admin')
