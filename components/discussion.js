@@ -34,7 +34,7 @@ export default function Discussion({id, discussions, owner, resolved}) {
         setLoading(false);
     }
 
-    const deleteAnswer = async a_id => {
+    const DeleteAnswer = async a_id => {
         setLoading(true);
         console.log('delete hit');
         const res = await fetch('/api/query/discussion', {
@@ -64,11 +64,11 @@ export default function Discussion({id, discussions, owner, resolved}) {
                             <div id="discussion" className="left">
                                 <img alt="msg icon" title="user" src="https://img.icons8.com/external-flatart-icons-lineal-color-flatarticons/64/000000/external-message-chat-flatart-icons-lineal-color-flatarticons-5.png"/>
                                 <p className="answer">{d.answer}</p>
-                                { user.type === 'admin' || owner === user._id ? <img className="delete" alt="del btn" onClick={() => deleteAnswer(d._id)} src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-delete-multimedia-kiranshastry-solid-kiranshastry.png"/> : null }
+                                { user.type === 'admin' || owner === user._id ? <img className="delete" alt="del btn" onClick={() => DeleteAnswer(d._id)} src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-delete-multimedia-kiranshastry-solid-kiranshastry.png"/> : null }
                             </div> 
                             :
                             <div id="discussion" className="right">
-                                { user.type === 'admin' ? <img className="delete" onClick={() => deleteAnswer(d._id)} alt="del btn" src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-delete-multimedia-kiranshastry-solid-kiranshastry.png"/> : null }
+                                { user.type === 'admin' ? <img className="delete" onClick={() => DeleteAnswer(d._id)} alt="del btn" src="https://img.icons8.com/external-kiranshastry-solid-kiranshastry/64/000000/external-delete-multimedia-kiranshastry-solid-kiranshastry.png"/> : null }
                                 <p className="answer">{d.answer}</p>
                                 <img alt="msg icon" title="admin" src="https://img.icons8.com/external-flatart-icons-solid-flatarticons/64/000000/external-message-chat-flatart-icons-solid-flatarticons-5.png"/>
                             </div>
