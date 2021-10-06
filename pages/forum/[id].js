@@ -5,6 +5,7 @@ import { fetchQueryById } from "../../services/methods";
 import ErrorBanner from "../../components/errorBanner";
 import { useAuth } from "../../services/hooks";
 import styles from "../../styles/Forum.module.css";
+import Discussion from "../../components/discussion";
 
 export async function getServerSideProps(context) {
     return {
@@ -28,7 +29,7 @@ export default function QuerySpecific({ id }) {
             }
             const query = await fetchQueryById(id);
             if (query) {
-                console.log(query.discussions);
+                console.log(query);
                 setQuery(query);
             }
             else setError('Query Not Found');
@@ -48,7 +49,11 @@ export default function QuerySpecific({ id }) {
                     query ?
                     <div id="main" className={styles.container1}>
                         <h1>{query.question}</h1>
-                        <p className="writer">Asked By <em>{query.by.username}</em></p>
+                        <div id="opts">
+                            <p className="writer"><strong>By:</strong> <em>{query.by.username}</em></p>
+                            <p className="resolved"><strong>Status:</strong> {query.resolved ? "Closed" : "Open"}</p>
+                        </div>
+                        <Discussion id={id} resolved={query.resolved} discussions={query.discussions} owner={query.by._id} />
                     </div>
                     :
                     <h1>Query Not Found</h1>
@@ -56,12 +61,15 @@ export default function QuerySpecific({ id }) {
 
             <style jsx>{`
                 h1 {
-                    text-align: center;
                     padding-top: 2em;
                 }
-                p.writer {
-                    text-align: center;
+                #opts {
                     padding: 1em 0;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                #main {
+                    margin-bottom: 2em;
                 }
             `}</style>
         </Layout>
