@@ -41,16 +41,23 @@ export default function QuerySpecific({ id }) {
     }, []);
 
     const DeleteQuery = async () => {
-        if (!confirm('Are you sure? Because can\'t undo this action later!')) return;
+        setLoading(true);
+        if (!confirm('Are you sure? Because can\'t undo this action later!')) {
+            setLoading(false);
+            return;
+        }
         const res = await deleteQueryById(id);
         if (res) Route.push('/forum');
         else setError('Cant delete forum with more than 2 messages in discussions or you don\'t have right permissions! if latter, please speak admin.');
+        setLoading(false);
     }
 
     const AlterStatus = async () => {
+        setLoading(true);
         const res = await updateQueryStatus(id);
         if (res) Route.reload(window.location.pathname);
         else setError('Error occured while changing query status! Try again later');
+        setLoading(false);
     }
     
     return (
