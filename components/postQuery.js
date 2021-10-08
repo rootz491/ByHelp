@@ -3,6 +3,7 @@ import { postQuestion } from '../services/methods';
 import ErrorBanner from './errorBanner';
 import SuccessBanner from './successBanner';
 import styles from '../styles/Forum.module.css';
+import Route from 'next/router';
 
 export default function PostQuery({ hidden }) {
     const [loading, setLoading] = useState(false);
@@ -35,6 +36,9 @@ export default function PostQuery({ hidden }) {
         else {
             setQuestion('');
             setSuccess('Congratulations! your question is posted. now wait for admin\'s response');
+            setTimeout(() => {
+                Route.reload(window.location.pathname + `/${data._id}`);
+            }, 3000);
         }
         setLoading(false);
     }

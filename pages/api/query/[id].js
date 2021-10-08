@@ -34,6 +34,22 @@ async function handler(req, res) {
                 return res.status(403).json({success: false, error: error.message});
             }
 
+        case "PUT":
+            try {
+                const thatQuery = await Query.findById(query.id).populate('by').exec();
+                if (thatQuery) {
+                    if (user.type === 'admin') {
+                        thatQuery.resolved = !thatQuery.resolved;
+                        await thatQuery.save();
+                        return res.json({success: true});
+                    }
+                    else throw {message: "Query doesn't belong to you"}
+                }
+                else throw {message: "Query doesn't exist"}
+            } catch (error) {
+                return res.status(403).json({success: false, error: error.message});
+            }
+
         default:
             res.status(405).end();
 

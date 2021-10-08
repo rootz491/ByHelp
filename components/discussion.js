@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { useBearer, useUser } from "../services/hooks";
-import { useRouter } from "next/router";
+import Route from "next/router";
 
 export default function Discussion({id, discussions, owner, resolved}) {
-    const router = useRouter();
     const [user, setUser] = useState({});
     const [answer, setAnswer] = useState('');
     const [loading, setLoading] = useState(false);
@@ -29,7 +28,7 @@ export default function Discussion({id, discussions, owner, resolved}) {
                 id, answer
             })
         });
-        if (res.ok) router.reload(window.location.pathname);
+        if (res.ok) Route.reload(window.location.pathname);
         else alert('something went wrong, try again later');
         setLoading(false);
     }
@@ -47,7 +46,7 @@ export default function Discussion({id, discussions, owner, resolved}) {
                 queryID: id, discussionID: a_id
             })
         });
-        if (res.ok) router.reload(window.location.pathname);
+        if (res.ok) Route.reload(window.location.pathname);
         else alert('something went wrong, try again later');
         setLoading(false);
     }
@@ -80,7 +79,6 @@ export default function Discussion({id, discussions, owner, resolved}) {
                         <p>Maybe wait a little and someone will respond 🙂</p>
                     </div>
                 }
-
             </div>
             {
                 !resolved ?
@@ -96,8 +94,8 @@ export default function Discussion({id, discussions, owner, resolved}) {
                 #cover {
                     margin-top: 2em;
                     width: 100%;
-                    height: 50vh;
-                    overflow-y: scroll;
+                    min-height: 50vh;
+                    // overflow-y: scroll;
                 }
                 #wait {
                     text-align: center;
@@ -142,11 +140,11 @@ export default function Discussion({id, discussions, owner, resolved}) {
                     border-color: grey;
                     outline: none;
                 }
-                .delete {
+                #discussion img.delete {
                     cursor: pointer;
                     display: none;
-                    width: 30px;
-                    height: 30px;
+                    width: 20px;
+                    height: 20px;
                 }
                 #discussion:hover .delete {
                     display: block;
@@ -158,6 +156,9 @@ export default function Discussion({id, discussions, owner, resolved}) {
                     }
                     #discussion {
                         width: 90%;
+                    }
+                    #discussion img.delete {
+                        display: block;
                     }
                 }
             `}</style>

@@ -74,6 +74,28 @@ export async function fetchQueryById(id) {
     return data.query;
 }
 
+export async function deleteQueryById(id) {
+    const res = await fetch(`/api/query/${id}`, {
+        method: 'DELETE',
+        headers: {
+            "authorization": await useBearer()
+        }
+    })
+    const data = await res.json();
+    return data.success;
+}
+
+export async function updateQueryStatus(id) {
+    const res = await fetch(`/api/query/${id}`, {
+        method: 'PUT',
+        headers: {
+            "authorization": await useBearer()
+        }
+    })
+    const data = await res.json();
+    return data.success;
+}
+
 export async function getFaq() {
     // Here will be all the questions and answers. That's it. simple and steady 😂
     return [
