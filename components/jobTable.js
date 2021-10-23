@@ -7,19 +7,17 @@ export default function JobTable({ jobs }) {
                 <div className="head">
                     <div className="row">
                         <p className="title"><strong>Job</strong></p>
-                        <p className="description"><strong>Description</strong></p>
+                        <p className="status"><strong>status</strong></p>
                         <p className="employer"><strong>Employer</strong></p>
-                        {/* <p><strong>Current Employees</strong></p> */}
                     </div>
                 </div>
                 <div className="body">
                     { jobs.length > 0 ? jobs.map((job, i) => (
-                        <Link key={i} href={`/job/${job.id}`}><a>
+                        <Link key={i} href={`/job/${job._id}`}><a>
                         <div className="row job">
-                            <p className="title">{job.title}</p>
-                            <p className="description">{job.description}</p>
-                            <p className="employer">{job.employer}</p>
-                            {/* <p className="ce">{job.currentEmployees}</p> */}
+                            <p>{job.title}</p>
+                            <p>{job.status}</p>
+                            <p>{job.employer.username}</p>
                         </div></a>
                         </Link>
                     )) : <div className="row job"><p></p><p>No jobs available at the moment!</p><p></p></div> }
@@ -36,11 +34,11 @@ export default function JobTable({ jobs }) {
                     border-left: 1px solid black;
                     border-right: 1px solid black;
                     display: grid;
-                    grid-template-columns: 400px 550px 150px;
+                    grid-template-columns: 700px 150px 150px;
                     text-align: center;
                     padding: 1em .4em; 
                 }
-                .title, .description {
+                .title, .employer, .status {
                     text-align: left;
                 } 
                 .job {
@@ -56,13 +54,13 @@ export default function JobTable({ jobs }) {
                         width: 100%;
                     }
                     .row {
-                        grid-template-columns: 30% 55% 15%;
+                        grid-template-columns: 70% 15% 15%;
                         font-size: 15px;
                     }
                 }
                 @media screen and (max-width: 500px) {
                     .row {
-                        grid-template-columns: 30% 40% 25%;
+                        grid-template-columns: 60% 20% 20%;
                         font-size: 13px;
                     }
                 }

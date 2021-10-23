@@ -1,6 +1,16 @@
 import Job from "../../../models/job";
 import isAuthenticated from "../../../middlewares/isAuthenticated";
 
+/* Job Endpoints:
+
+ * fetch jobs           [both]
+ * create job           [employer]
+ * fetch job by ID      [both]
+ * delete job           [employer]
+ * join job             [employee]
+ * leave job            [employee]
+*/
+
 async function handler(req, res) {
     const {
         body,
@@ -10,22 +20,42 @@ async function handler(req, res) {
 
     switch(method) {
 
+        /* fetch jobs */
         case "GET":
-            const result = await Job.find().populate('employer').exec();
-            var jobs = [];
-            result.forEach(job => {
-                jobs.push({ id: job._id, title: job.title, description: job.description, employer: job.employer.username, currentEmployees: job.employees.length });
-            });
-            return res.json({ success: true, jobs });
+            //  employer can't view others jobs
+            if (user.type === 'employer') throw {message: 'employer cant view others jobs'}
+            else {
+                const jobs = await Job.find().select('-workers -expectedDays -isFullPaid -isTokenPaid -tokenMoney -fullMoney -description').populate('employer').exec();
+                return res.json({ success: true, jobs });
+            }
 
+        /* create job */
         case "POST":
             try {
                 // check if user is `employee` or not
                 if (user.type === 'employee') throw {message: "Employee cannot post job"}
                 // verify fields
-                if (!(body.title && body.description)) throw {message: "All fields are required"}
+                const {
+                    title, description, expectedDays, expectedWorkers, deadline, pincode, location
+                } = body;
+                if (!(title && description && expectedWorkers && expectedDays && deadline && pincode && location)) throw {message: "All fields are required"}
+                // check if pincode is valid
+                const validPincodes = [123, 124, 125, 126]
+                let isValidCode = false
+                for (let i in validPincodes) {
+                    if (i === pincode) {
+                        isValidCode = true;
+                        break; // TODO maybe this break will totally break this switch-case, so have to check it first
+                    }
+                }
+                if (!isValidCode) throw {message: "invaid pincode"} //  if code isn't valid then fail!
+                //  calculate money
+                const ob = calculateMoney(expectedDays, expectedWorkers)
+                const {
+                    fullMoney, tokenMoney
+                } = ob;
                 // add to DB
-                const newJob = new Job({ title: body.title, description: body.description, employer: req.user._id });
+                const newJob = new Job({ title, description, expectedDays, expectedWorkers, deadline, address: {pincode, location}, employer: user._id, tokenMoney, fullMoney });
                 return res.json({success: true, job: await newJob.save()});
             } catch (error) {
                 return res.status(403).json({success: false, message: error.message});
@@ -33,6 +63,18 @@ async function handler(req, res) {
         
         default:
             return res.status(405).send();
+    }
+}
+
+function calculateMoney(expectedDays, expectedWorkers) {
+    //  1 worker = 400 rs
+    //  service charge = 50 rs
+    const fullMoney = (400 * (expectedDays * expectedWorkers)) + 50;
+    // token money [advance] is 10% of full money
+    const tokenMoney = fullMoney/10;
+    return {
+        fullMoney,
+        tokenMoney
     }
 }
 
