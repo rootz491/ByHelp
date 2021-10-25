@@ -17,6 +17,7 @@ export default function JobSpecific({ id }) {
     const [job, setJob] = useState()
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState({});
+    const [joined, setJoined] = useState(false);
 
     useEffect(() => {
         async function Exec() {
@@ -28,10 +29,15 @@ export default function JobSpecific({ id }) {
                 // fetch job
                 const job = await fetchJobById(id);
                 setJob(job);
-                console.log(user);
-                console.log(job);
                 setLoading(false);
-            }    
+
+                // check if user is `employee` and then has joined this job or not
+                job.workers.forEach(u => {
+                    if (u.user._id === user._id) {
+                        setJoined(true);
+                    }
+                })
+            }
                 else Route.push('/');
         }
         Exec();
@@ -45,7 +51,7 @@ export default function JobSpecific({ id }) {
                         <h1>Loading, please wait ...</h1>
                     :
                         job ?
-                        <Job job={job} /> 
+                        <Job job={job} joined={joined} user={user} />
                         :
                         <h1>This Job doesn't exists ...</h1>
                 }

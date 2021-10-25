@@ -3,7 +3,11 @@ import User from "../models/user";
 
 // take necessary user data -> put into payload of JWT -> return tokens
 export async function getTokens(user) {
-    const authToken = jwt.sign(user, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20m' });
+    let authToken;
+    if(process.env.MODE === 'DEV') 
+        authToken = jwt.sign(user, process.env.AUTH_TOKEN_SECRET, { expiresIn: '1d' });
+    else
+        authToken = jwt.sign(user, process.env.AUTH_TOKEN_SECRET, { expiresIn: '20m' });
     const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '12d' });
     return { authToken, refreshToken }
 }

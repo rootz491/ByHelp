@@ -36,7 +36,7 @@ async function handler(req, res) {
                         return res.json({success: true});
                     }
                     //  if job is closed, employer cant delete
-                    if (job.status != 'close') throw {message: 'job is closed now, please contact admin'}
+                    if (job.status !== 'open') throw {message: 'job is closed now, please contact admin'}
                     //  check if job's 'employer' is same as 'current user'
                     if (job.employer.id === user._id) {
                         await job.remove();
@@ -51,17 +51,35 @@ async function handler(req, res) {
 
         case 'POST':
             try {
+                const jobId = query.id;
                 //  edge cases
-                if (query.id != 24) throw {message: "job ID is malformed"}
+                if (jobId.length != 24) throw {message: "job ID is malformed"}
                 else if (!query.action) throw {message: "?action=** is required"}
                 else if (user.type != 'employee') throw {message: "sorry, you cannot join the job"}
                 //  handle join the job
                 else if (query.action === 'join') {
-                    console.log(query.id);
+                    //  TODO check 
+                    let thatJob = await Job.findByIdAndUpdate(jobId, {
+                    '$push': {
+                            'workers': {    // array name
+                                'user': user._id    //  
+                            }
+                        }
+                    }).populate('workers.user');
+                    if (thatJob) return res.json({success: true})
+                    else throw {message: "sorry, something weird just happened!"}
                 }
                 //  handle leave the job
                 else if (query.action === 'leave') {
-                    console.log(query.id);
+                    let thatJob = await Job.findByIdAndUpdate(jobId, {
+                        '$pull': {
+                            'workers': {
+                                'user': user._id
+                            }
+                        }
+                    });
+                    if (thatJob) return res.json({success: true})
+                    else throw {message: "sorry, something weird just happened!"}
                 }
                 //  invalid action
                 else throw {message: "invalid action"}

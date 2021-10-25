@@ -17,7 +17,7 @@ export default function WorkPlace() {
             const user = await useUser();
             setUser(user);
             // if user is valid
-            if (user) {
+            if (user && user.type !== 'employer') {
                 setLoading(false);
                 // fetch job
                 const jobs = await fetchJobs();

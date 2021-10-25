@@ -1,5 +1,27 @@
+import { jobJoin, jobLeave } from "../services/methods"
+import router from "next/router";
 
-export default function Job({ job }) {
+export default function Job({ job, user, joined }) {
+
+    const joinJob = async () => {
+        if (!confirm('are you sure you want to join this job?')) return;
+        const res = await jobJoin(job._id);
+        if (res) {
+            alert("job joined successfully")
+            router.reload(window.location);
+        }
+        else alert('lol, you failed!')
+    }
+    
+    const leaveJob = async () => {
+        if (!confirm('are you sure you want to leave this job?')) return;
+        const res = await jobLeave(job._id);
+        if (res) {
+            alert("job left successfully")
+            router.reload(window.location);
+        }
+    }
+
     return (
         <>
             <h1>{job.title}</h1>
@@ -24,13 +46,27 @@ export default function Job({ job }) {
                     <div className="field"><h4>Name</h4> <p>{job.employer.username}</p></div>
                     <div className="field"><h4>Email</h4> <p>{job.employer.email}</p></div>
                 </div>
+                {
+                    user.type === 'employee' ? 
+                        joined ?
+                        <div id="join"> {/* leave job */}
+                            <h1>Leave This Job 🙁</h1>
+                            <button type="button" onClick={leaveJob}>leave now</button>
+                        </div> 
+                        :
+                        <div id="join"> {/* join job */}
+                            <h1>Join This Job 🙂</h1>
+                            <button type="button" onClick={joinJob}>join now</button>
+                        </div> 
+                    : null
+                }
                 <div>
                     <h2>List of Employee's who've joined</h2>
                     <ol>
                     { 
                         job.workers.length > 0 ? 
                         job.workers.map((e, i) => 
-                            <li key={i}><div className="field"><p>{e.username}</p></div></li>
+                            <li key={i}><div className="field"><p>{e.user.username}</p></div></li>
                         ) : 
                         <h3>No employees joined yet</h3> 
                     }
@@ -51,6 +87,13 @@ export default function Job({ job }) {
                     margin: 1em 0;
                     min-width: 250px;
                 }
+                #join {
+                    margin: 1em 0;
+                    text-align: center;
+                }
+                #join > button {
+                    padding: 10px 5px;
+                }
                 .ee {
                     display: grid;
                 }
@@ -59,7 +102,7 @@ export default function Job({ job }) {
                     padding: 1em;
                 }
                 li {
-                    padding: 0 1em;
+                    margin: 0 1em;
                 }
                 @media screen and (max-width: 550px) {
                     .ee > div {

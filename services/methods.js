@@ -37,6 +37,28 @@ export async function postJob(title, description) {
     return data;
 }
 
+export async function jobJoin(id) {
+    const res = await fetch(`/api/job/${id}?action=join`, {
+        method: 'POST',
+        headers: {
+            "authorization": await useBearer()
+        }
+    });
+    const data = await res.json();
+    return data.success;
+}
+
+export async function jobLeave(id) {
+    const res = await fetch(`/api/job/${id}?action=leave`, {
+        method: 'POST',
+        headers: {
+            "authorization": await useBearer()
+        }
+    });
+    const data = await res.json();
+    return data.success;
+}
+
 export async function getQueries() {
     const res = await fetch("/api/query", {
         method: 'GET',

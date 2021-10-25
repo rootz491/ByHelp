@@ -26,7 +26,7 @@ export default function Header() {
                 <>
                     <Link href="/profile"><a>profile</a></Link>
                     {user.type !== 'employee'   ? <Link href="/job"><a>post job</a></Link> : null} {/* show post page to admin or employer only */}
-                    <Link href="/work-place"><a>work place</a></Link>
+                    {user.type !== 'employer'   ? <Link href="/work-place"><a>work place</a></Link> : null}
                     <Link href="/forum"><a>forum</a></Link>
                     <a href="#" onClick={Logout}>logout</a>
                 </>

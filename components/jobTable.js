@@ -20,7 +20,7 @@ export default function JobTable({ jobs }) {
                             <p>{job.employer.username}</p>
                         </div></a>
                         </Link>
-                    )) : <div className="row job"><p></p><p>No jobs available at the moment!</p><p></p></div> }
+                    )) : <div className="row job"><p>No jobs available at the moment!</p><p></p><p></p></div> }
                 </div>
             </div>
 
