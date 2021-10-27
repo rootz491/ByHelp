@@ -58,15 +58,23 @@ async function handler(req, res) {
                 else if (user.type != 'employee') throw {message: "sorry, you cannot join the job"}
                 //  handle join the job
                 else if (query.action === 'join') {
-                    //  TODO check 
-                    let thatJob = await Job.findByIdAndUpdate(jobId, {
-                    '$push': {
-                            'workers': {    // array name
-                                'user': user._id    //  
-                            }
+                    let job = await Job.findById(jobId);
+                    //  check job status
+                    if (job.status !== 'open')
+                        throw {message: "sorry, job is not opened anymore."}
+                    //  check if required workers are already met!
+                    if (job.workers.length === job.expectedWorkers)
+                        throw {message: "required workers already full"}
+                    //  check if user is already present
+                    job.workers.forEach(u => {
+                        if (u.user == user._id) {   //  if dup found, throw error
+                            throw {message: "user has already joined the job"}
                         }
-                    }).populate('workers.user');
-                    if (thatJob) return res.json({success: true})
+                    })
+                    //  push employee to array
+                    job.workers.push({user: user._id});
+                    job = await job.save();
+                    if (job) return res.json({success: true})
                     else throw {message: "sorry, something weird just happened!"}
                 }
                 //  handle leave the job

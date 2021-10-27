@@ -22,12 +22,16 @@ async function handler(req, res) {
 
         /* fetch jobs */
         case "GET":
+            let jobs;
             //  employer can't view others jobs
-            if (user.type === 'employer') throw {message: 'employer cant view others jobs'}
-            else {
-                const jobs = await Job.find().select('-workers -expectedDays -isFullPaid -isTokenPaid -tokenMoney -fullMoney -description').populate('employer').exec();
-                return res.json({ success: true, jobs });
+            if (user.type === 'employer') {
+                jobs = await Job.find({employer: user._id}).select('-workers -expectedDays -isFullPaid -isTokenPaid -tokenMoney -fullMoney -description').populate('employer').exec();
             }
+            //  admin and employee can see all jobs
+            else {
+                jobs = await Job.find().select('-workers -expectedDays -isFullPaid -isTokenPaid -tokenMoney -fullMoney -description').populate('employer').exec();
+            }
+            return res.json({ success: true, jobs });
 
         /* create job */
         case "POST":
