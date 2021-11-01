@@ -43,11 +43,12 @@ async function handler(req, res) {
                     title, description, expectedDays, expectedWorkers, deadline, pincode, location
                 } = body;
                 if (!(title && description && expectedWorkers && expectedDays && deadline && pincode && location)) throw {message: "All fields are required"}
+                console.log('hit');
                 // check if pincode is valid
-                const validPincodes = [123, 124, 125, 126]
+                const validPincodes = [123456, 123789, 123443, 123491]
                 let isValidCode = false
-                for (let i in validPincodes) {
-                    if (i === pincode) {
+                for (let i of validPincodes) {
+                    if (i == pincode) {
                         isValidCode = true;
                         // break; // TODO maybe this break will totally break this switch-case, so have to check it first
                     }

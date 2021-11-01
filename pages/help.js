@@ -28,7 +28,7 @@ export default function Help({ qa }) {
             }
         </ul>
         <div className="more">
-            <p>If you still have any doubts, you can as us via posting it as a <a href="/query">query</a> or can contact us directly through provided contact number.</p>
+            <p>If you still have any doubts, you can as us via posting it as a <a href="/forum">query</a> on our forum or can contact us directly through provided contact number.</p>
         </div>
       </div>
 

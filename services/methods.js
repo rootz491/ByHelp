@@ -22,7 +22,7 @@ export async function fetchJobById(id) {
     return data.job;
 }
 
-export async function postJob(title, description) {
+export async function postJob(title, description, expectedDays, expectedWorkers, deadline, pincode, location) {
     const res = await fetch("/api/job", {
         method: 'POST',
         headers: {
@@ -30,7 +30,7 @@ export async function postJob(title, description) {
             "authorization": await useBearer()
         },
         body: JSON.stringify({
-            title, description
+            title, description, expectedDays, expectedWorkers, deadline, pincode, location
         })
     });
     const data = await res.json();

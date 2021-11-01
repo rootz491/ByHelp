@@ -4,6 +4,7 @@ import Layout from "../../components/layout"
 import { fetchJobById } from "../../services/methods";
 import { useUser } from "../../services/hooks";
 import Job from "../../components/job";
+import Route from "next/router";
 
 export async function getServerSideProps(context) {
     return {
@@ -30,13 +31,16 @@ export default function JobSpecific({ id }) {
                 const job = await fetchJobById(id);
                 setJob(job);
                 setLoading(false);
-
-                // check if user is `employee` and then has joined this job or not
-                job.workers.forEach(u => {
-                    if (u.user._id === user._id) {
-                        setJoined(true);
-                    }
-                })
+                
+                if (job) {
+                    // check if user is `employee` and then has joined this job or not
+                    job.workers.forEach(u => {
+                        if (u.user._id === user._id) {
+                            setJoined(true);
+                        }
+                    })
+                }
+                else Route.push('/')
             }
                 else Route.push('/');
         }

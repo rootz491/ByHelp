@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Route from 'next/router';
 import { useUser } from '../../services/hooks';
 import Layout from '../../components/layout';
-import PostForm from '../../components/postForm';
+import JobForm from '../../components/jobForm';
 import styles from '../../styles/Home.module.css';
 
 export default function Job() {
@@ -17,8 +17,8 @@ export default function Job() {
   return (
     <Layout title="home">
       <div className={styles.container}>
-        <h1>Post your Job</h1>
-        <PostForm />
+        <h1>Post Your Job</h1>
+        <JobForm />
       </div>
     </Layout>
   )
