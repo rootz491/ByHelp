@@ -49,7 +49,7 @@ async function handler(req, res) {
                 for (let i in validPincodes) {
                     if (i === pincode) {
                         isValidCode = true;
-                        break; // TODO maybe this break will totally break this switch-case, so have to check it first
+                        // break; // TODO maybe this break will totally break this switch-case, so have to check it first
                     }
                 }
                 if (!isValidCode) throw {message: "invaid pincode"} //  if code isn't valid then fail!
